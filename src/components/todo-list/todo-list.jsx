@@ -1,23 +1,34 @@
-import * as React from 'react';
-import { Checkbox } from '../checkbox';
-import { TodosContext } from '../../todo-context';
-import './todo-list.scss';
+import * as React from "react";
+import { Checkbox } from "../checkbox";
+import { TodosContext } from "../../todo-context";
+import "./todo-list.scss";
 
 export const TodoList = () => {
   const { todos, setTodos } = React.useContext(TodosContext);
 
   const handleDelete = (id) => {
-    // Fix an ability to delete task
+    setTodos(
+      todos.filter((todo) => {
+        if (todo.id === id) {
+          return false;
+        }
+        return true;
+      })
+    );
   };
 
   const toggleCheck = (id) => {
-    // Fix an ability to toggle task
-  };
-
-  const handleKeyUp = (e, id) => {
-    if (e.keyCode === 13) {
-      toggleCheck(id);
-    }
+    setTodos(
+      todos.map((todo) => {
+        if (todo.id === id) {
+          return {
+            ...todo,
+            checked: !todo.checked,
+          };
+        }
+        return todo;
+      })
+    );
   };
 
   return (
@@ -31,13 +42,14 @@ export const TodoList = () => {
               label={todoItem.label}
               checked={todoItem.checked}
               onClick={() => toggleCheck(todoItem.id)}
-              onKeyUp={(e) => handleKeyUp(e, todoItem.id)}
               onDelete={() => handleDelete(todoItem.id)}
             />
           ))}
         </div>
       ) : (
-        <div className="no-todos">Looks like you&apos;re absolutely free today!</div>
+        <div className="no-todos">
+          Looks like you&apos;re absolutely free today!
+        </div>
       )}
     </div>
   );
